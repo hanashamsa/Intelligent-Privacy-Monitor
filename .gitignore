@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+.env/
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Logs
+logs/
+
+# Outputs
+outputs/screenshots/
+outputs/videos/
+outputs/*.mp4
+outputs/*.avi
+
+# Models downloaded locally (optional)
+models/
+
+# Face database (private)
+face_db/
+
+# Generated embeddings (private)
+embeddings/
+
+# Python cache
+.pytest_cache/
+.mypy_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build
+build/
+dist/
+*.egg-info/
