@@ -1,65 +1,66 @@
-import time
+from identity.person import Person
 
 
 class IdentityManager:
 
-    def __init__(self):
+    def __init__(self, recognizer, recognition_interval=15):
 
-        self.identities = {}
+        self.recognizer = recognizer
 
-        self.recognition_interval = 15
+        self.people = {}
 
-    def should_recognize(self, tracker_id):
+        self.recognition_interval = recognition_interval
 
-        if tracker_id not in self.identities:
-            return True
+    def process(self, tracker_id, crop, bbox, confidence):
 
-        frame_count = self.identities[tracker_id]["frame_count"]
+        if tracker_id not in self.people:
 
-        return frame_count >= self.recognition_interval
+            person = Person(
+                tracker_id=tracker_id,
+                bbox=bbox,
+                confidence=confidence
+            )
 
-    def update(self, tracker_id, label, confidence):
+            self.people[tracker_id] = person
 
-        self.identities[tracker_id] = {
+        person = self.people[tracker_id]
 
-            "label": label,
+        person.bbox = bbox
+        person.confidence = confidence
 
-            "confidence": confidence,
+        person.frames_since_recognition += 1
 
-            "frame_count": 0,
+        if (
+            not person.recognized
+            or person.frames_since_recognition >= self.recognition_interval
+        ):
 
-            "last_seen": time.time()
+            label, similarity, face_bbox = self.recognizer.recognize(crop)
 
-        }
+            if label != "No Face":
 
-    def tick(self):
+                person.label = label
+
+                person.similarity = similarity
+
+                person.face_bbox = face_bbox
+
+                person.recognized = True
+
+                person.frames_since_recognition = 0
+
+        return person
+
+    def cleanup(self, active_ids):
 
         remove = []
 
-        now = time.time()
+        for tracker_id in self.people:
 
-        for tracker_id in self.identities:
-
-            self.identities[tracker_id]["frame_count"] += 1
-
-            self.identities[tracker_id]["last_seen"] = now
-
-        for tracker_id in list(self.identities):
-
-            if now - self.identities[tracker_id]["last_seen"] > 10:
+            if tracker_id not in active_ids:
 
                 remove.append(tracker_id)
 
         for tracker_id in remove:
 
-            del self.identities[tracker_id]
-
-    def get_label(self, tracker_id):
-
-        if tracker_id not in self.identities:
-
-            return "Recognizing...", 0
-
-        item = self.identities[tracker_id]
-
-        return item["label"], item["confidence"]
+            del self.people[tracker_id]
