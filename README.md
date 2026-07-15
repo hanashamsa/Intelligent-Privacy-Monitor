@@ -95,7 +95,29 @@ Evidence Package
    ▼
 Dashboard
 ```
+---
+```
+# Using Guide 
 
+1- Add Images of the owner to a newly made folder named face_db\owner ( This must hold aorund 250-300 pictures of the owner as this is used for training. possibly the pictures are capured from a video and converted to .jpg at 30fps )
+
+2- Download and add  User.\insight\models\biffalo_l as this is a must step for buiding the database of owner 
+
+3- Make a folder embeddings\owner_embedding.npy as the trained dataset is stored here 
+
+4- Run face\build_dataset.py , this make the training and loads the data to owner_embedding.npy ( choose the right path for certain os ).
+#results will be visible as
+==================================================
+Images Processed : 300
+Valid Faces      : 300
+Database Created Successfully
+==================================================
+
+5- Download and load face_landmarker.task at pose\head_pose.py as we use 'mediapipe'
+
+6- Main parameters can be found and altered under surveilance\threat_engine.py
+```
+----
 ---
 
 # Features
