@@ -119,7 +119,21 @@ Database Created Successfully
 ```
 ----
 ---
+```
+##PIP
 
+ultralytics
+opencv-python
+torch
+torchvision
+numpy
+supervision
+insightface
+mediapipe
+onnxruntime-gpu (if have GPU )
+onnxruntime
+```
+---
 # Features
 
 ## Real-Time Person Detection
